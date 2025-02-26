@@ -3,6 +3,7 @@ package com.auth.security.jwt.msvc_security_jwt_auth.config;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -16,12 +17,17 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
+import com.auth.security.jwt.msvc_security_jwt_auth.services.UserDetailsServiceImpl;
+
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity
 public class SecurityConfig {
 @Autowired
 private AuthenticationConfiguration authenticationConfiguration;
+
+@Autowired
+private UserDetailsServiceImpl userDetailsServiceImpl;
 
 // este es el "contenedor" donde vamos a poner los filtros por donde van a pasar las peticiones.
 @Bean
@@ -32,8 +38,9 @@ public SecurityFilterChain securityFilterChain (HttpSecurity httpSecurity) throw
     .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
     .authorizeHttpRequests(http ->{
         //ENDPOINTS PÚBLICOS
-
+        http.requestMatchers(HttpMethod.GET, "/api/test/hello").permitAll();
         //ENDPOINTS PRIVADOS 
+        http.requestMatchers(HttpMethod.GET, "/api/test/helloSecured").hasAnyRole("ADMIN", "DEVELOPER");
     })
     .addFilterBefore(null, null) //acá iria el JwtTokenValidator, esa clase la tenemos que hacer nosotros y luego inyectarla.
     .build();
@@ -48,10 +55,10 @@ public SecurityFilterChain securityFilterChain (HttpSecurity httpSecurity) throw
  //tener en cuenta que este método va a necesitar un UserDetailsService que es la clase que hará la llamada a la DB desde el service y un passwordEncoder para manejar
 //las contraseñas
  @Bean
- public AuthenticationProvider authenticationProvider(){
+ public AuthenticationProvider authenticationProvider(UserDetailsServiceImpl userDetailsServiceImpl){
     DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
     provider.setPasswordEncoder(passwordEncoder());
-    provider.setUserDetailsService(null);
+    provider.setUserDetailsService(userDetailsServiceImpl);
     return provider;
  }
  //con esto vamos a poder encriptar la contraseña

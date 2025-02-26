@@ -1,5 +1,6 @@
 package com.auth.security.jwt.msvc_security_jwt_auth;
 
+import java.util.List;
 import java.util.Set;
 
 import org.springframework.boot.CommandLineRunner;
@@ -10,6 +11,7 @@ import org.springframework.context.annotation.Bean;
 import com.auth.security.jwt.msvc_security_jwt_auth.persistence.entity.PermissionEntity;
 import com.auth.security.jwt.msvc_security_jwt_auth.persistence.entity.RoleEntity;
 import com.auth.security.jwt.msvc_security_jwt_auth.persistence.entity.RoleEnum;
+import com.auth.security.jwt.msvc_security_jwt_auth.persistence.entity.UserEntity;
 import com.auth.security.jwt.msvc_security_jwt_auth.repository.UserRepository;
 
 @SpringBootApplication
@@ -65,8 +67,50 @@ public class MsvcSecurityJwtAuthApplication {
 			.build();
 
 			//creados ya los permisos y los roles deberiamos crear los usuarios y guardarlos dentro del UserRepository.
+			UserEntity userFacundo = UserEntity.builder()
+		.username("facundo")	
+		.password("1234asd")
+		.isEnabled(true)
+		.accountNoExpired(true)
+		.accountNoLocked(true)
+		.credentialNoExpired(true)
+		.roles(Set.of(adminRole))
+		.build();
 
+		UserEntity userGabriel = UserEntity.builder()
+		.username("gabriel")	
+		.password("fgh123")
+		.isEnabled(true)
+		.accountNoExpired(true)
+		.accountNoLocked(true)
+		.credentialNoExpired(true)
+		.roles(Set.of(userRole))
+		.build();
 
-		};
-	}
+		UserEntity userJuan = UserEntity.builder()
+		.username("ivan")	
+		.password("jkl123")
+		.isEnabled(true)
+		.accountNoExpired(true)
+		.accountNoLocked(true)
+		.credentialNoExpired(true)
+		.roles(Set.of(invitedRole))
+		.build();
+
+		UserEntity userIvan = UserEntity.builder()
+		.username("ivan")	
+		.password("zxc123")
+		.isEnabled(true)
+		.accountNoExpired(true)
+		.accountNoLocked(true)
+		.credentialNoExpired(true)
+		.roles(Set.of(developerRole))
+		.build();
+
+		userRepository.saveAll(List.of(userFacundo, userGabriel, userIvan, userJuan));
+	};
 }
+}
+
+
+
