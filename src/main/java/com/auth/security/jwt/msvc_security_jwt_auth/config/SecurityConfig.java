@@ -26,6 +26,7 @@ public class SecurityConfig {
 @Autowired
 private AuthenticationConfiguration authenticationConfiguration;
 
+@SuppressWarnings("unused")
 @Autowired
 private UserDetailsServiceImpl userDetailsServiceImpl;
 
@@ -38,11 +39,13 @@ public SecurityFilterChain securityFilterChain (HttpSecurity httpSecurity) throw
     .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
     .authorizeHttpRequests(http ->{
         //ENDPOINTS PÚBLICOS
-        http.requestMatchers(HttpMethod.GET, "/api/test/hello").permitAll();
+        http.requestMatchers(HttpMethod.GET, "/test/hello").permitAll();
         //ENDPOINTS PRIVADOS 
-        http.requestMatchers(HttpMethod.GET, "/api/test/helloSecured").hasAnyRole("ADMIN", "DEVELOPER");
+        http.requestMatchers(HttpMethod.POST, "/test/post").hasAnyRole("ADMIN", "DEVELOPER");
+        http.requestMatchers(HttpMethod.PATCH, "/test/patch").hasAnyAuthority("REFACTOR");
+        
     })
-    .addFilterBefore(null, null) //acá iria el JwtTokenValidator, esa clase la tenemos que hacer nosotros y luego inyectarla.
+    //.addFilterBefore(null, null) //acá iria el JwtTokenValidator, esa clase la tenemos que hacer nosotros y luego inyectarla.
     .build();
 }
  //ahora necesitariamos armar un componente que maneje la autenticacion a partir de un objeto de Spring Security
@@ -62,7 +65,8 @@ public SecurityFilterChain securityFilterChain (HttpSecurity httpSecurity) throw
     return provider;
  }
  //con esto vamos a poder encriptar la contraseña
- @Bean
+
+@Bean
  public PasswordEncoder passwordEncoder(){
     return new BCryptPasswordEncoder();
  }

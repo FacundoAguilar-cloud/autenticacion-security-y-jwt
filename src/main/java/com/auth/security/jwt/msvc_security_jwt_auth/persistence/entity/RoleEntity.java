@@ -38,6 +38,6 @@ private RoleEnum roleEnum;
 @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 @JoinTable(name = "role_permissions", joinColumns = @JoinColumn(name = "role_id"), inverseJoinColumns = @JoinColumn(name = "permission_id"))
 @Builder.Default
-private Set <PermissionEntity> permissionList = new HashSet<>();  // dentro de los <> iria la entidad de los permisos que cada usuario tendria, eso lo tenemos que armar
+private Set <PermissionEntity> permissionList = new HashSet<PermissionEntity>();  // dentro de los <> iria la entidad de los permisos que cada usuario tendria, eso lo tenemos que armar
 
 }

@@ -63,13 +63,14 @@ public class MsvcSecurityJwtAuthApplication {
 			.build();
 
 			RoleEntity developerRole = RoleEntity.builder()
-			.permissionList(Set.of(readPermission,createPermission,deletePermission,updatePermission,refactorPermission))
+			.roleEnum(RoleEnum.DEVELOPER)
+			.permissionList(Set.of(createPermission,readPermission,deletePermission,updatePermission,refactorPermission))
 			.build();
 
 			//creados ya los permisos y los roles deberiamos crear los usuarios y guardarlos dentro del UserRepository.
 			UserEntity userFacundo = UserEntity.builder()
 		.username("facundo")	
-		.password("1234asd")
+		.password("$2a$10$9KZk3JaKVV4c3.EWi0f6kOvYRQFxpmbJgwqIvqH30edeqFa5dHfJq")
 		.isEnabled(true)
 		.accountNoExpired(true)
 		.accountNoLocked(true)
@@ -79,7 +80,7 @@ public class MsvcSecurityJwtAuthApplication {
 
 		UserEntity userGabriel = UserEntity.builder()
 		.username("gabriel")	
-		.password("fgh123")
+		.password("$2a$10$EySNkTOTKLIBEg9MdoQjf.26U3TPUjMhD6WuzpMIXv0fY6HGg/rwq")
 		.isEnabled(true)
 		.accountNoExpired(true)
 		.accountNoLocked(true)
@@ -88,8 +89,8 @@ public class MsvcSecurityJwtAuthApplication {
 		.build();
 
 		UserEntity userJuan = UserEntity.builder()
-		.username("ivan")	
-		.password("jkl123")
+		.username("juan")	
+		.password("$2a$10$VvH45hSrUjhNWQCkVN9T7uZEd8OKUyOijJKNho5buqH8H8.NEh2OO")
 		.isEnabled(true)
 		.accountNoExpired(true)
 		.accountNoLocked(true)
@@ -99,7 +100,7 @@ public class MsvcSecurityJwtAuthApplication {
 
 		UserEntity userIvan = UserEntity.builder()
 		.username("ivan")	
-		.password("zxc123")
+		.password("$2a$10$obhoZsxZpAiYRR.lhaA4X.bIl/5X1Cq4a68hiK4cf6tFg9MQx0wjy")
 		.isEnabled(true)
 		.accountNoExpired(true)
 		.accountNoLocked(true)
