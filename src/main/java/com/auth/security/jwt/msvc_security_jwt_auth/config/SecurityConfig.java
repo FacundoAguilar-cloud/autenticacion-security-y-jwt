@@ -29,10 +29,6 @@ public class SecurityConfig {
 @Autowired
 private AuthenticationConfiguration authenticationConfiguration;
 
-@SuppressWarnings("unused")
-@Autowired
-private UserDetailsServiceImpl userDetailsServiceImpl;
-
 @Autowired
 private JwtUtils jwtUtils;
 
@@ -49,10 +45,13 @@ public SecurityFilterChain securityFilterChain (HttpSecurity httpSecurity) throw
     .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
     .authorizeHttpRequests(http ->{
         //ENDPOINTS PÚBLICOS
-        http.requestMatchers(HttpMethod.GET, "/test/hello").permitAll();
+        http.requestMatchers(HttpMethod.POST, "/auth/**").permitAll();
         //ENDPOINTS PRIVADOS 
         http.requestMatchers(HttpMethod.POST, "/test/post").hasAnyRole("ADMIN", "DEVELOPER");
         http.requestMatchers(HttpMethod.PATCH, "/test/patch").hasAnyAuthority("REFACTOR");
+        http.requestMatchers(HttpMethod.GET, "/test/hello").hasAnyAuthority("READ", "CREATE");
+        //ENDPOINTS NO ESPECIFICADOS 
+        http.anyRequest().denyAll();
         
     })
     .addFilterBefore(new JwtTokenValidator(jwtUtils), BasicAuthenticationFilter.class) //acá iria el JwtTokenValidator, esa clase la tenemos que hacer nosotros y luego inyectarla.
