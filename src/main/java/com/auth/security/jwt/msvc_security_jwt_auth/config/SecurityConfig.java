@@ -16,7 +16,10 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 
+import com.auth.security.jwt.msvc_security_jwt_auth.Util.JwtUtils;
+import com.auth.security.jwt.msvc_security_jwt_auth.config.filter.JwtTokenValidator;
 import com.auth.security.jwt.msvc_security_jwt_auth.services.UserDetailsServiceImpl;
 
 @Configuration
@@ -29,6 +32,13 @@ private AuthenticationConfiguration authenticationConfiguration;
 @SuppressWarnings("unused")
 @Autowired
 private UserDetailsServiceImpl userDetailsServiceImpl;
+
+@Autowired
+private JwtUtils jwtUtils;
+
+@SuppressWarnings("unused")
+@Autowired
+private JwtTokenValidator jwtTokenValidator;
 
 // este es el "contenedor" donde vamos a poner los filtros por donde van a pasar las peticiones.
 @Bean
@@ -45,7 +55,7 @@ public SecurityFilterChain securityFilterChain (HttpSecurity httpSecurity) throw
         http.requestMatchers(HttpMethod.PATCH, "/test/patch").hasAnyAuthority("REFACTOR");
         
     })
-    //.addFilterBefore(null, null) //acá iria el JwtTokenValidator, esa clase la tenemos que hacer nosotros y luego inyectarla.
+    .addFilterBefore(new JwtTokenValidator(jwtUtils), BasicAuthenticationFilter.class) //acá iria el JwtTokenValidator, esa clase la tenemos que hacer nosotros y luego inyectarla.
     .build();
 }
  //ahora necesitariamos armar un componente que maneje la autenticacion a partir de un objeto de Spring Security
